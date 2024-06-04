@@ -210,6 +210,7 @@ class _lineByLineCmdState extends State<lineByLineCmd> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       TextField(
+
                         controller: headingController,
                         decoration: InputDecoration(labelText: 'Heading'),
                       ),
