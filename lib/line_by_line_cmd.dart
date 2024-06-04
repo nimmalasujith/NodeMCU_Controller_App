@@ -55,6 +55,7 @@ class _lineByLineCmdState extends State<lineByLineCmd> {
     saveItems();
   }
   sendCommand(String cmd) async {
+    print(cmd);
     try {
       final response = await http.get(Uri.parse('$baseUrl/?State=$cmd'));
 
@@ -69,12 +70,14 @@ class _lineByLineCmdState extends State<lineByLineCmd> {
   }
   play() async {
     for (lineByLineCmdConvertor x in items) {
-      sendCommand(x.cmd);
+
       await Future.delayed(Duration(seconds: x.sec));
+      sendCommand(x.cmd);
       setState(() {
         currentIndex++;
       });
     }
+    sendCommand("-1");
     _isPlay = false;
   }
 
@@ -199,59 +202,61 @@ class _lineByLineCmdState extends State<lineByLineCmd> {
           showModalBottomSheet(
             context: context,
             builder: (BuildContext context) {
-              return Container(
-                padding: EdgeInsets.all(20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    TextField(
-                      controller: headingController,
-                      decoration: InputDecoration(labelText: 'Heading'),
-                    ),
-                    SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: TextField(
-                            controller: commandController,
-                            decoration: InputDecoration(labelText: 'Command'),
-                          ),
-                        ),
-                        Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                              child: TextField(
-                                controller: secondsController,
-                                decoration: InputDecoration(labelText: 'Delay'),
-                                keyboardType: TextInputType.number,
-                              ),
-                            ))
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            Colors.greenAccent),
+              return SafeArea(
+                child: Container(
+                  padding: EdgeInsets.all(20),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      TextField(
+                        controller: headingController,
+                        decoration: InputDecoration(labelText: 'Heading'),
                       ),
-                      onPressed: () {
-                        setState(() {
-                          items.add(lineByLineCmdConvertor(
-                              heading: headingController.text.trim(),
-                              cmd: commandController.text,
-                              sec:
-                              int.tryParse(secondsController.text.trim()) ??
-                                  0));
-                        });
-                        saveItems();
-                        Navigator.pop(context); // Close the bottom sheet
-                      },
-                      child: Text('Done'),
-                    ),
-                    SizedBox(height: 50),
-                  ],
+                      SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: TextField(
+                              controller: commandController,
+                              decoration: InputDecoration(labelText: 'Command'),
+                            ),
+                          ),
+                          Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                                child: TextField(
+                                  controller: secondsController,
+                                  decoration: InputDecoration(labelText: 'Delay'),
+                                  keyboardType: TextInputType.number,
+                                ),
+                              ))
+                        ],
+                      ),
+                      SizedBox(height: 20),
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Colors.greenAccent),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            items.add(lineByLineCmdConvertor(
+                                heading: headingController.text.trim(),
+                                cmd: commandController.text,
+                                sec:
+                                int.tryParse(secondsController.text.trim()) ??
+                                    0));
+                          });
+                          saveItems();
+                          Navigator.pop(context); // Close the bottom sheet
+                        },
+                        child: Text('Done'),
+                      ),
+                      SizedBox(height: 50),
+                    ],
+                  ),
                 ),
               );
             },

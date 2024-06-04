@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:nodemcu_controller/text.dart';
 
 class Terminal extends StatefulWidget {
   const Terminal({super.key});
@@ -55,7 +56,11 @@ class _TerminalState extends State<Terminal> {
     return Scaffold(
       body: SafeArea(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            backButton(),
+            Center(child: Text("This page is in Testing Mode.",style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500),)),
             TextField(
               controller: _controller,
               decoration: InputDecoration(
